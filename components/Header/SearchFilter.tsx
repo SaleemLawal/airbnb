@@ -90,7 +90,10 @@ export default function SearchFilter() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger
+        asChild
+        className="transition-transform duration-200 hover:scale-101"
+      >
         <Button variant={"outline"} asChild className="cursor-pointer rounded-full py-6 pl-6 pr-2.5">
           <div className="md:flex-0 flex-1 md:justify-center">
             <p>Anywhere</p>
