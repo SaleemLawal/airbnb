@@ -1,20 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import { Search } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Map from "../Map";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import FilterContent from "./FilterContent";
 import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import FilterDetail from "./FilterDetail";
+import { getCities } from "@/actions/cities";
+
+type countriesProp = Awaited<ReturnType<typeof getCities>>;
 
 export default function SearchFilter() {
-  const mapCenter = { lat: 40.7128, lng: -74.006 };
   const mapZoom = 10;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -23,6 +33,30 @@ export default function SearchFilter() {
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
   const [bathroomCount, setBathroomCount] = useState(1);
+  const [cities, setCities] = useState<countriesProp[]>(() => {
+    const cachedCities = localStorage.getItem("cities");
+    if (!cachedCities) return [];
+    return JSON.parse(cachedCities);
+  });
+  const [mapCenter, setMapCenter] = useState({ lat: 40.7128, lng: -74.006 });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const value = await getCities();
+
+        if (value.data) {
+          setCities(value.data);
+          localStorage.setItem("cities", JSON.stringify(value.data));
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+    if (cities.length === 0) {
+      fetchData();
+    }
+  }, [cities]);
 
   useEffect(() => {
     if (!api) return;
@@ -35,16 +69,25 @@ export default function SearchFilter() {
     });
   }, [api]);
 
-  const OnNextClick = () => {
+  const OnNextClick = useCallback(() => {
     if (api) {
       api.scrollTo(api.selectedScrollSnap() + 1);
     }
-  };
-  const onBackClick = () => {
+  }, [api]);
+
+  const onBackClick = useCallback(() => {
     if (api) {
       api.scrollTo(api.selectedScrollSnap() - 1);
     }
-  };
+  }, [api]);
+
+  const updateMap = useCallback(
+    ({ latitude, longitude }: countriesProp) => {
+      setMapCenter({ lat: latitude, lng: longitude });
+    },
+    [setMapCenter],
+  );
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -67,23 +110,25 @@ export default function SearchFilter() {
         <DialogHeader>
           <DialogTitle className="border-b-1">Filters</DialogTitle>
         </DialogHeader>
+        <DialogDescription />
 
         <Carousel setApi={setApi} className="w-full overflow-x-auto">
           <CarouselContent>
             <CarouselItem>
               <FilterContent header="Where do you wanna go?" description="Find the perfect location">
-                <Select>
+                <Select onValueChange={(value) => updateMap(value)}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a location" />
                   </SelectTrigger>
 
                   <SelectContent className="max-h-70 overflow-y-auto">
                     <SelectGroup>
-                      <SelectItem value="aruba">Aruba</SelectItem>
-                      <SelectItem value="usa">United States</SelectItem>
-                      <SelectItem value="canada">Canada</SelectItem>
-                      <SelectItem value="spain">Spain</SelectItem>
-                      <SelectItem value="mexico">Mexico</SelectItem>
+                      {cities.length > 0 &&
+                        cities.map((val: countriesProp, index) => (
+                          <SelectItem key={index} value={val}>
+                            {val.name}
+                          </SelectItem>
+                        ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -146,7 +191,7 @@ export default function SearchFilter() {
             className="bg-red-bnb hover:bg-red-bnb/85 w-full flex-1 cursor-pointer p-4 sm:w-auto"
             onClick={OnNextClick}
           >
-            Next
+            {current === 3 ? "Search" : "Next"}
           </Button>
         </DialogFooter>
       </DialogContent>
