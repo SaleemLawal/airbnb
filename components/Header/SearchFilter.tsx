@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-separator";
-import { PlusIcon, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Map from "../Map";
@@ -11,8 +11,6 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import FilterContent from "./FilterContent";
 import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
-import { PiPlusCircleThin } from "react-icons/pi";
-import { PiMinusCircleThin } from "react-icons/pi";
 import FilterDetail from "./FilterDetail";
 
 export default function SearchFilter() {

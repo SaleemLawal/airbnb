@@ -1,7 +1,5 @@
-import { cn } from "@/lib/utils";
 import React from "react";
 import { PiMinusCircleThin, PiPlusCircleThin } from "react-icons/pi";
-import { Button } from "../ui/button";
 
 interface FilterDetailProps {
   title: string;

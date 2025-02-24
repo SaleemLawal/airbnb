@@ -1,4 +1,3 @@
-// components/Map.js
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
