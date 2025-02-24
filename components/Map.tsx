@@ -10,7 +10,7 @@ interface MapProps {
 }
 const Map = ({ center, zoom }: MapProps) => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
+    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY as string,
   });
 
   const options = useMemo(
