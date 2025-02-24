@@ -20,6 +20,9 @@ export default function SearchFilter() {
   const [current, setCurrent] = useState(0);
   const [_, setCount] = useState(0);
   const [date, setDate] = useState<DateRange | undefined>();
+  const [guestCount, setGuestCount] = useState(1);
+  const [roomCount, setRoomCount] = useState(1);
+  const [bathroomCount, setBathroomCount] = useState(1);
 
   useEffect(() => {
     if (!api) return;
@@ -103,9 +106,26 @@ export default function SearchFilter() {
             <CarouselItem>
               <FilterContent header="More information" description="Find your perfect place!">
                 <div className="space-y-12">
-                  <FilterDetail title="Guests" description="How many guests are coming?" borderApply />
-                  <FilterDetail title="Rooms" description="How many rooms do you need?" borderApply />
-                  <FilterDetail title="Bathrooms" description="How many bathrooms do you need" />
+                  <FilterDetail
+                    title="Guests"
+                    description="How many guests are coming?"
+                    borderApply
+                    count={guestCount}
+                    setCount={setGuestCount}
+                  />
+                  <FilterDetail
+                    title="Rooms"
+                    description="How many rooms do you need?"
+                    borderApply
+                    count={roomCount}
+                    setCount={setRoomCount}
+                  />
+                  <FilterDetail
+                    title="Bathrooms"
+                    description="How many bathrooms do you need"
+                    count={bathroomCount}
+                    setCount={setBathroomCount}
+                  />
                 </div>
               </FilterContent>
             </CarouselItem>
