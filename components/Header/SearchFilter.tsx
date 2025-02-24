@@ -94,9 +94,11 @@ export default function SearchFilter() {
         <Button variant={"outline"} asChild className="cursor-pointer rounded-full py-6 pl-6 pr-2.5">
           <div className="md:flex-0 flex-1 md:justify-center">
             <p>Anywhere</p>
-            <Separator orientation="vertical" className="hidden h-6 w-4 md:block" />
+
+            <Separator orientation="vertical" className="hidden h-6 w-[1px] bg-gray-200 md:block" />
             <p className="hidden md:block">Any week</p>
-            <Separator orientation="vertical" className="hidden h-6 w-4 md:block" />
+
+            <Separator orientation="vertical" className="hidden h-6 w-[1px] bg-gray-200 md:block" />
             <p className="hidden md:block">Add Guests</p>
 
             <div className="bg-red-bnb ml-auto flex h-10 w-10 items-center justify-center rounded-full ">
