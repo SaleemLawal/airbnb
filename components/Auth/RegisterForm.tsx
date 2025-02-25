@@ -11,6 +11,7 @@ import { Separator } from "../ui/separator";
 import { RegisterSchema } from "@/schema/register.schema";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import Social from "./Social";
 
 interface RegisterFormProps {
   toggle: () => void;
@@ -76,25 +77,7 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
         </Button>
 
         <Separator />
-        <div className="flex flex-col space-y-2">
-          <Button
-            variant={"outline"}
-            className="flex w-full cursor-pointer items-center justify-between border-2 border-black p-6"
-          >
-            Continue with Google
-            <FcGoogle />
-          </Button>
-
-          <div>
-            <Button
-              variant={"outline"}
-              className="flex w-full cursor-pointer items-center justify-between border-2 border-black p-6"
-            >
-              Continue with Github
-              <FaGithub />
-            </Button>
-          </div>
-        </div>
+        <Social />
         <small className="flex flex-col items-center justify-center text-gray-400 sm:flex-row md:gap-2">
           Already have an account?{" "}
           <span className="cursor-pointer text-black hover:underline" onClick={toggle}>

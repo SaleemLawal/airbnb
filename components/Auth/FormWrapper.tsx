@@ -5,7 +5,7 @@ import LoginForm from "./LoginForm";
 import { cn } from "@/lib/utils";
 
 interface FormWrapperProps {
-  type: "Login" | "Sign Up";
+  type: "Login" | "Sign Up" | "Log Out";
   setIsRegistering: React.Dispatch<React.SetStateAction<boolean>>;
   isRegistering: boolean;
 }

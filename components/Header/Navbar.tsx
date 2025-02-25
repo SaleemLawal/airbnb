@@ -7,8 +7,11 @@ import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/h
 import Link from "next/link";
 import SearchFilter from "./SearchFilter";
 import AuthWrapper from "../Auth/AuthWrapper";
+import { auth } from "@/auth";
+import { CgProfile } from "react-icons/cg";
 
-export default function NavBar() {
+export default async function NavBar() {
+  const session = await auth();
   return (
     <div className="flex items-center justify-between space-x-3 md:space-x-0">
       <Link href="/" className="hidden items-center justify-center space-x-2 md:flex">
@@ -25,19 +28,27 @@ export default function NavBar() {
 
         <HoverCard openDelay={0} closeDelay={100}>
           <HoverCardTrigger asChild>
-            <Button variant={"outline"} className="space-x-1 rounded-full p-6">
+            <Button variant={"outline"} className="space-x-1 rounded-full pr-1! py-5">
               <CiMenuBurger />
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback className="text-black">SL</AvatarFallback>
+                <AvatarImage src={session?.user?.image || undefined} />
+                <AvatarFallback className="bg-gray-300 text-black">
+                  <CgProfile />
+                </AvatarFallback>
               </Avatar>
             </Button>
           </HoverCardTrigger>
-          
+
           <HoverCardContent className="w-40">
             <div className="flex flex-col items-start">
-              <AuthWrapper type="Login" />
-              <AuthWrapper type="Sign Up" />
+              {session?.user === undefined ? (
+                <>
+                  <AuthWrapper type="Login" />
+                  <AuthWrapper type="Sign Up" />{" "}
+                </>
+              ) : (
+                <AuthWrapper type="Log Out" />
+              )}
             </div>
           </HoverCardContent>
         </HoverCard>
