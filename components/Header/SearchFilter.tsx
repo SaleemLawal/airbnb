@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import { Search } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Map from "../Map";
 import {
   Dialog,
@@ -28,35 +28,35 @@ export default function SearchFilter() {
   const mapZoom = 10;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const [_, setCount] = useState(0);
+  const [, setCount] = useState(0);
   const [date, setDate] = useState<DateRange | undefined>();
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
   const [bathroomCount, setBathroomCount] = useState(1);
-  const [cities, setCities] = useState<countriesProp[]>(() => {
-    const cachedCities = localStorage.getItem("cities");
-    if (!cachedCities) return [];
-    return JSON.parse(cachedCities);
-  });
+  // const [cities, setCities] = useState<countriesProp[]>(() => {
+  //   const cachedCities = localStorage.getItem("cities");
+  //   if (!cachedCities) return [];
+  //   return JSON.parse(cachedCities);
+  // });
   const [mapCenter, setMapCenter] = useState({ lat: 40.7128, lng: -74.006 });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const value = await getCities();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const value = await getCities();
 
-        if (value.data) {
-          setCities(value.data);
-          localStorage.setItem("cities", JSON.stringify(value.data));
-        }
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-      }
-    };
-    if (cities.length === 0) {
-      fetchData();
-    }
-  }, [cities]);
+  //       if (value.data) {
+  //         setCities(value.data);
+  //         localStorage.setItem("cities", JSON.stringify(value.data));
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching countries:", error);
+  //     }
+  //   };
+  //   if (cities.length === 0) {
+  //     fetchData();
+  //   }
+  // }, [cities]);
 
   useEffect(() => {
     if (!api) return;
@@ -128,12 +128,12 @@ export default function SearchFilter() {
 
                   <SelectContent className="max-h-70 overflow-y-auto">
                     <SelectGroup>
-                      {cities.length > 0 &&
+                      {/* {cities.length > 0 &&
                         cities.map((val: countriesProp, index) => (
                           <SelectItem key={index} value={val}>
                             {val.name}
                           </SelectItem>
-                        ))}
+                        ))} */}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
