@@ -3,12 +3,15 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { CiMenuBurger } from "react-icons/ci";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import Link from "next/link";
 import SearchFilter from "./SearchFilter";
-import AuthWrapper from "../Auth/AuthWrapper";
+import Login from "../Auth/Login";
 import { auth } from "@/auth";
 import { CgProfile } from "react-icons/cg";
+import LogOut from "../Auth/LogOut";
+
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 
 export default async function NavBar() {
   const session = await auth();
@@ -26,9 +29,9 @@ export default async function NavBar() {
           <Link href={"/"}>Airbnb your home</Link>
         </Button>
 
-        <HoverCard openDelay={0} closeDelay={100}>
-          <HoverCardTrigger asChild>
-            <Button variant={"outline"} className="space-x-1 rounded-full pr-1! py-5">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant={"outline"} className="pr-1! space-x-1 rounded-full py-5">
               <CiMenuBurger />
               <Avatar>
                 <AvatarImage src={session?.user?.image || undefined} />
@@ -37,21 +40,28 @@ export default async function NavBar() {
                 </AvatarFallback>
               </Avatar>
             </Button>
-          </HoverCardTrigger>
-
-          <HoverCardContent className="w-40">
+          </PopoverTrigger>
+          <PopoverContent className="w-70">
             <div className="flex flex-col items-start">
               {session?.user === undefined ? (
                 <>
-                  <AuthWrapper type="Login" />
-                  <AuthWrapper type="Sign Up" />{" "}
+                  <Login type="Sign Up" />
+                  <Login type="Login" />
                 </>
               ) : (
-                <AuthWrapper type="Log Out" />
+                <>
+                  <Button variant={"link"}>My Trips</Button>
+                  <Button variant={"link"}>My Favorites</Button>
+                  <Button variant={"link"}>My Reservations</Button>
+                  <Button variant={"link"}>My Properties</Button>
+                  <Button variant={"link"}>Airbnb my home</Button>
+                  <Separator />
+                  <LogOut />
+                </>
               )}
             </div>
-          </HoverCardContent>
-        </HoverCard>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );

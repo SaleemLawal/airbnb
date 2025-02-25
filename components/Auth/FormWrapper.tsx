@@ -5,12 +5,11 @@ import LoginForm from "./LoginForm";
 import { cn } from "@/lib/utils";
 
 interface FormWrapperProps {
-  type: "Login" | "Sign Up" | "Log Out";
   setIsRegistering: React.Dispatch<React.SetStateAction<boolean>>;
   isRegistering: boolean;
 }
 
-export default function FormWrapper({ type, setIsRegistering, isRegistering }: FormWrapperProps) {
+export default function FormWrapper({setIsRegistering, isRegistering }: FormWrapperProps) {
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
   const handleRegisterFormSwitch = () => {

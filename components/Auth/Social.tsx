@@ -1,15 +1,24 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 
 export default function Social() {
+  const [isPending, setIsPending] = useState(false);
+
   const onClick = async (provider: "google" | "github") => {
-    signIn(provider, {
-      callbackUrl: "/",
-    });
+    setIsPending(true);
+    try {
+      await signIn(provider, {
+        callbackUrl: "/",
+      });
+    } catch (error) {
+      console.error("Sign in error:", error);
+    } finally {
+      setIsPending(false);
+    }
   };
   return (
     <div className="flex flex-col space-y-5">
@@ -18,6 +27,7 @@ export default function Social() {
         className="flex w-full cursor-pointer items-center justify-between border-2 border-black p-6"
         onClick={() => onClick("google")}
         type="button"
+        disabled={isPending}
       >
         Continue with Google
         <FcGoogle />
@@ -29,6 +39,7 @@ export default function Social() {
           className="flex w-full cursor-pointer items-center justify-between border-2 border-black p-6"
           onClick={() => onClick("github")}
           type="button"
+          disabled={isPending}
         >
           Continue with Github
           <FaGithub />

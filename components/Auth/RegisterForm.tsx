@@ -1,23 +1,26 @@
 "use client";
-import React from "react";
-import { Label } from "../ui/label";
+import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "../ui/separator";
 import { RegisterSchema } from "@/schema/register.schema";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import Social from "./Social";
+import { register } from "@/actions/register.action";
+import FormError from "../Status/FormError";
+import FormSuccess from "../Status/FormSuccess";
 
 interface RegisterFormProps {
   toggle: () => void;
 }
 
 export default function RegisterForm({ toggle }: RegisterFormProps) {
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -28,7 +31,19 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
-    console.log(values);
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      const response = await register(values);
+
+      if (response.error) {
+        setError(response.error);
+      }
+      if (response.success) {
+        setSuccess(response.success);
+      }
+    });
   }
   return (
     <Form {...form}>
@@ -39,7 +54,7 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Name" {...field} className="p-6 " />
+                <Input placeholder="Name" {...field} className="p-6 " disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -52,7 +67,7 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Email" {...field} className="p-6 " />
+                <Input placeholder="Email" {...field} className="p-6 " disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -65,14 +80,17 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Password" type="password" {...field} className="p-6 " />
+                <Input placeholder="Password" type="password" {...field} className="p-6 " disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="bg-red-bnb hover:bg-red-bnb/85 w-full p-6">
+        <FormError message={error} />
+        <FormSuccess message={success} />
+
+        <Button type="submit" className="bg-red-bnb hover:bg-red-bnb/85 w-full p-6" disabled={isPending}>
           Continue
         </Button>
 

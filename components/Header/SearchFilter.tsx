@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import { Search } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Map from "../Map";
 import {
   Dialog,
@@ -28,7 +28,7 @@ export default function SearchFilter() {
   const mapZoom = 10;
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
-  const [_, setCount] = useState(0);
+  const [, setCount] = useState(0);
   const [date, setDate] = useState<DateRange | undefined>();
   const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
