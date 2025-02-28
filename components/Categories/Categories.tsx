@@ -2,13 +2,13 @@
 import Image from "next/image";
 import React from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { iconFiles } from "@/lib/utils";
+import { icons } from "@/lib/utils";
 
 export default function Categories() {
   return (
     <ScrollArea className="border-b p-6 md:px-10 whitespace-nowrap">
       <div className="flex space-x-8 items-center justify-between">
-        {iconFiles.map((icon, index) => {
+        {icons.map((icon, index) => {
           return (
             <div
               key={index}

@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const iconFiles = [
+export const icons = [
   "beach",
   "windmill",
   "modern",
@@ -22,3 +22,12 @@ export const iconFiles = [
   "barn",
   "lux",
 ];
+
+export const defaultMapLocation = {
+  lat: 40.7128,
+  lng: -74.006,
+};
+export const defaultDate = {
+  from: new Date(),
+  to: new Date(),
+};

@@ -14,10 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import FilterDetail from "@/components/Header/FilterDetail";
-import FilterContent from "@/components/Header/FilterContent";
+import FilterDetail from "@/components/SearchBar/FilterDetail";
+import FilterContent from "@/components/SearchBar/FilterContent";
 import { Calendar } from "@/components/ui/calendar";
-import Map from "../Map";
+import MyMap from "../Map";
 import {
   Carousel,
   CarouselContent,
@@ -41,12 +41,11 @@ interface CarouselWrapperProps {
   setDateRange: Dispatch<SetStateAction<DateRange | undefined>>;
   setApi: Dispatch<SetStateAction<CarouselApi | undefined>>;
   setMapCenter: Dispatch<SetStateAction<{ lat: number; lng: number }>>;
-  isRegistration: boolean;
 }
 
-type countriesProp = Awaited<ReturnType<typeof getCities>>;
+type locationsProp = Awaited<ReturnType<typeof getCities>>;
 
-export default function CarouselWrapper({
+export default function FilterCarousel({
   setApi,
   dateRange,
   guestCount,
@@ -59,18 +58,15 @@ export default function CarouselWrapper({
   setDateRange,
   setMapCenter,
   setLocation,
-  isRegistration,
 }: CarouselWrapperProps) {
-  const mapZoom = 7;
-
   const updateMap = useCallback(
-    ({ latitude, longitude }: countriesProp) => {
+    ({ latitude, longitude }: locationsProp) => {
       setMapCenter({ lat: latitude, lng: longitude });
     },
     [setMapCenter]
   );
 
-  const [cities, setCities] = useState<countriesProp[]>(() => {
+  const [cities, setCities] = useState<locationsProp[]>(() => {
     const cachedCities = localStorage.getItem("cities");
     if (!cachedCities) return [];
     return JSON.parse(cachedCities);
@@ -97,32 +93,13 @@ export default function CarouselWrapper({
   return (
     <Carousel setApi={setApi} className="w-full overflow-x-auto px-4">
       <CarouselContent>
-        {isRegistration && (
-          <CarouselItem>
-            <FilterContent
-              header="Which of these best describes your place?"
-              description="Pick a category"
-            >
-              <p>Categories</p>
-            </FilterContent>
-          </CarouselItem>
-        )}
-
         <CarouselItem>
           <FilterContent
-            header={
-              isRegistration
-                ? "Where is your place located"
-                : "Where do you wanna go?"
-            }
-            description={
-              isRegistration
-                ? "Help guests find you!"
-                : "Find the perfect location"
-            }
+            header="Where do you wanna go?"
+            description="Find the perfect location"
           >
             <Select
-              onValueChange={(value: countriesProp) => {
+              onValueChange={(value: locationsProp) => {
                 updateMap(value);
                 setLocation(value.city);
               }}
@@ -134,7 +111,7 @@ export default function CarouselWrapper({
               <SelectContent className="max-h-70 overflow-y-auto">
                 <SelectGroup>
                   {cities.length > 0 &&
-                    cities.map((val: countriesProp, index) => (
+                    cities.map((val: locationsProp, index) => (
                       <SelectItem key={index} value={val}>
                         {val.name}
                       </SelectItem>
@@ -144,38 +121,29 @@ export default function CarouselWrapper({
             </Select>
 
             <Separator className="h-0.25 bg-gray-200" />
-            {<Map center={mapCenter} zoom={mapZoom} />}
+            {<MyMap center={mapCenter} />}
           </FilterContent>
         </CarouselItem>
 
-        {!isRegistration && (
-          <CarouselItem>
-            <FilterContent
-              header="Where do you plan go?"
-              description="Make sure eveyone is free!"
-            >
-              <Calendar
-                className="rounded-md border"
-                mode="range"
-                selected={dateRange}
-                onSelect={setDateRange}
-                disabled={{ before: new Date() }}
-              />
-            </FilterContent>
-          </CarouselItem>
-        )}
         <CarouselItem>
           <FilterContent
-            header={
-              isRegistration
-                ? "Share some basics about your place"
-                : "More information"
-            }
-            description={
-              isRegistration
-                ? "What amenities do you have?"
-                : "Find your perfect place!"
-            }
+            header="When do you plan go?"
+            description="Make sure eveyone is free!"
+          >
+            <Calendar
+              className="rounded-md border"
+              mode="range"
+              selected={dateRange}
+              onSelect={setDateRange}
+              disabled={{ before: new Date() }}
+            />
+          </FilterContent>
+        </CarouselItem>
+
+        <CarouselItem>
+          <FilterContent
+            header="More information"
+            description="Find your perfect place!"
           >
             <div className="space-y-12">
               <FilterDetail
@@ -201,39 +169,6 @@ export default function CarouselWrapper({
             </div>
           </FilterContent>
         </CarouselItem>
-
-        {isRegistration && (
-          <CarouselItem>
-            <FilterContent
-              header="Add a photo of your place"
-              description="Show guests what your place looks like!"
-            >
-              <p>Render Image</p>
-            </FilterContent>
-          </CarouselItem>
-        )}
-
-        {isRegistration && (
-          <CarouselItem>
-            <FilterContent
-              header="How would you describe your place?"
-              description="Short and sweet works best!"
-            >
-              <p>Render listing description</p>
-            </FilterContent>
-          </CarouselItem>
-        )}
-
-        {isRegistration && (
-          <CarouselItem>
-            <FilterContent
-              header="Now, set your price"
-              description="How much do you charge per night?"
-            >
-              <p>Render pricing</p>
-            </FilterContent>
-          </CarouselItem>
-        )}
       </CarouselContent>
     </Carousel>
   );

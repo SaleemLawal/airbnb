@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,13 +17,17 @@ import { Separator } from "../ui/separator";
 import Social from "./Social";
 import { login } from "@/actions/login.action";
 import FormError from "../Status/FormError";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
   toggle: () => void;
 }
 
 export default function LoginForm({ toggle }: LoginFormProps) {
-  const [success, setSuccess] = useState("");
+  const { update } = useSession();
+  const router = useRouter();
+  const [, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -39,7 +49,10 @@ export default function LoginForm({ toggle }: LoginFormProps) {
       if (response?.error) {
         form.reset();
         setError(response.error);
+        return;
       }
+      await update();
+      router.refresh();
     });
   }
 
@@ -52,7 +65,12 @@ export default function LoginForm({ toggle }: LoginFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Email" {...field} className="p-6" disabled={isPending}/>
+                <Input
+                  placeholder="Email"
+                  {...field}
+                  className="p-6"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -65,7 +83,13 @@ export default function LoginForm({ toggle }: LoginFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Password" type="password" {...field} className="p-6" disabled={isPending} />
+                <Input
+                  placeholder="Password"
+                  type="password"
+                  {...field}
+                  className="p-6"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,7 +97,11 @@ export default function LoginForm({ toggle }: LoginFormProps) {
         />
 
         <FormError message={error} />
-        <Button type="submit" className="bg-red-bnb hover:bg-red-bnb/85 w-full p-6" disabled={isPending}>
+        <Button
+          type="submit"
+          className="bg-red-bnb hover:bg-red-bnb/85 w-full p-6"
+          disabled={isPending}
+        >
           Continue
         </Button>
 
@@ -81,7 +109,10 @@ export default function LoginForm({ toggle }: LoginFormProps) {
         <Social />
         <small className="mt-10 flex flex-col items-center justify-center text-gray-400 sm:flex-row md:gap-2">
           First time using Airbnb?
-          <span className="cursor-pointer text-black hover:underline" onClick={toggle}>
+          <span
+            className="cursor-pointer text-black hover:underline"
+            onClick={toggle}
+          >
             Create an account
           </span>
         </small>
