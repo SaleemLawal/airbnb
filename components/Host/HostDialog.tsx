@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,6 +13,9 @@ import { defaultMapLocation } from "@/lib/utils";
 import HostCarousel from "./HostCarousel";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import Login from "../Auth/Login";
+import { hostSchema } from "@/schema/host.schema";
+import { z } from "zod";
+import { hostHome } from "@/actions/host.action";
 
 export default function HostDialog() {
   const user = useCurrentUser();
@@ -22,24 +24,16 @@ export default function HostDialog() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-  const [guestCount, setGuestCount] = useState<number>(1);
-  const [roomCount, setRoomCount] = useState(1);
-  const [bathroomCount, setBathroomCount] = useState(1);
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>(
     defaultMapLocation
   );
-  const [, setLocation] = useState<string>("Any Where");
 
   useEffect(() => {
     if (!isModalOpen) {
       setMapCenter(defaultMapLocation);
-      // setGuestCount(1);
-      setRoomCount(1);
-      setBathroomCount(1);
     }
   }, [isModalOpen]);
 
-  // setting the count and current state of the carousel
   useEffect(() => {
     if (!api) return;
     setCount(api.scrollSnapList().length);
@@ -50,10 +44,22 @@ export default function HostDialog() {
     });
   }, [api]);
 
+  const handleSubmit = async (value: z.infer<typeof hostSchema>) => {
+    console.log("Submitting host data:", value);
+    try {
+      const response = await hostHome(value);
+      console.log("Host submission response:", response);
+      if (response.success) {
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error submitting host data:", error);
+    }
+  };
+
   const OnNextClick = () => {
     if (api) {
       if (current === count) {
-        setIsModalOpen((prev) => !prev);
       }
       api.scrollTo(api.selectedScrollSnap() + 1);
     }
@@ -78,43 +84,22 @@ export default function HostDialog() {
       {!user ? (
         <Login type={"Login"} isDialog={true} />
       ) : (
-        <DialogContent className="w-full max-w-4xl px-0">
+        <DialogContent className="px-0 max-w-[500px] mx-auto">
           <DialogHeader>
             <DialogTitle className="border-b-1 px-6 pb-3 text-center">
               Airbnb your home!
             </DialogTitle>
           </DialogHeader>
-
           <HostCarousel
             setApi={setApi}
-            guestCount={guestCount}
-            roomCount={roomCount}
-            bathroomCount={bathroomCount}
-            mapCenter={mapCenter}
-            setGuestCount={setGuestCount}
-            setRoomCount={setRoomCount}
-            setBathroomCount={setBathroomCount}
             setMapCenter={setMapCenter}
-            setLocation={setLocation}
+            mapCenter={mapCenter}
+            handleSubmit={handleSubmit}
+            current={current}
+            count={count}
+            onBack={onBackClick}
+            onNext={OnNextClick}
           />
-
-          <DialogFooter className="flex w-full flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0 px-6">
-            {current !== 1 && (
-              <Button
-                className="w-full flex-1 cursor-pointer border-2 border-black p-6 sm:w-auto"
-                variant={"outline"}
-                onClick={onBackClick}
-              >
-                Back
-              </Button>
-            )}
-            <Button
-              className="bg-red-bnb hover:bg-red-bnb/85 w-full flex-1 cursor-pointer p-6 sm:w-auto"
-              onClick={OnNextClick}
-            >
-              {current === count ? "Create" : "Next"}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       )}
     </Dialog>

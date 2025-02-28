@@ -1,5 +1,4 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
 import { PiMinusCircleThin, PiPlusCircleThin } from "react-icons/pi";
 
 interface FilterDetailProps {
@@ -7,17 +6,19 @@ interface FilterDetailProps {
   description: string;
   borderApply?: boolean;
   count: number;
-  setCount: Dispatch<SetStateAction<number>>;
+  setCount: (value: number) => void;
 }
+
 export default function FilterDetail({ title, description, borderApply, count, setCount }: FilterDetailProps) {
   const decrementCount = () => {
     if (count - 1 < 0) return;
-    setCount((prev) => prev - 1);
+    setCount(count - 1);
   };
 
   const incrementCount = () => {
-    setCount((prev) => prev + 1);
+    setCount(count + 1);
   };
+
   return (
     <div className={`flex w-full flex-wrap items-center justify-between gap-4 ${borderApply ? "border-b-[1px]" : ""}`}>
       <div className="flex flex-col">

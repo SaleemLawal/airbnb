@@ -30,13 +30,12 @@ export default function FilterDialog() {
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>(
     defaultMapLocation
   );
-  const [location, setLocation] = useState<string>("Any Where");
+  const [, setLocation] = useState<string>("Any Where");
 
   useEffect(() => {
     if (!isModalOpen) {
       setMapCenter(defaultMapLocation);
       setDateRange(defaultDate);
-      // setGuestCount(1);
       setRoomCount(1);
       setBathroomCount(1);
     }

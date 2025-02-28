@@ -16,7 +16,7 @@ export default function Categories() {
               onClick={() => console.log(icon, "clicked")}
             >
               <Image
-                src={`categories/${icon}.svg`}
+                src={`/categories/${icon}.svg`}
                 width={24}
                 height={24}
                 alt={icon}
