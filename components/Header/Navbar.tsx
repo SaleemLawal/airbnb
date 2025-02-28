@@ -15,7 +15,7 @@ import HostDialog from "../Host/HostDialog";
 
 export default async function NavBar() {
   const session = await auth();
-  
+
   return (
     <div className="flex items-center justify-between space-x-3 md:space-x-0">
       <Link
@@ -29,16 +29,18 @@ export default async function NavBar() {
       <FilterDialog />
 
       <div className="flex cursor-pointer items-center justify-center space-x-2">
-        <HostDialog />
+        <div className="hidden md:block">
+          <HostDialog />
+        </div>
 
         <Popover>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
-              className="pr-1! space-x-1 rounded-full py-5"
+              className="pr-1! space-x-1 rounded-full py-5 flex items-center justify-center"
             >
-              <CiMenuBurger />
-              <Avatar>
+              <CiMenuBurger className="w-8 h-8 stroke-[1.5]" />
+              <Avatar className="hidden sm:block">
                 <AvatarImage src={session?.user?.image || undefined} />
                 <AvatarFallback className="bg-gray-300 text-black">
                   <CgProfile />

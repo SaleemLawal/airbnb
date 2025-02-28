@@ -33,7 +33,13 @@ import { Input } from "@/components/ui/input";
 import { DollarSign } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { hostSchema } from "@/schema/host.schema";
 import { Button } from "../ui/button";
@@ -51,6 +57,7 @@ interface CarouselWrapperProps {
 }
 
 type countriesProp = Awaited<ReturnType<typeof getCities>>;
+type FieldName = keyof z.infer<typeof hostSchema>;
 
 export default function HostCarousel({
   setApi,
@@ -78,14 +85,6 @@ export default function HostCarousel({
   });
   const [, setShowImageUpload] = useState(false);
   const [error, setError] = useState("");
-
-  const updateMap = useCallback(
-    ({ latitude, longitude }: countriesProp) => {
-      setMapCenter({ lat: latitude, lng: longitude });
-    },
-    [setMapCenter]
-  );
-
   const [cities, setCities] = useState<countriesProp[]>(() => {
     const cachedCities = localStorage.getItem("cities");
     if (!cachedCities) return [];
@@ -110,9 +109,46 @@ export default function HostCarousel({
     }
   }, [cities]);
 
+  const updateMap = useCallback(
+    ({ latitude, longitude }: countriesProp) => {
+      setMapCenter({ lat: latitude, lng: longitude });
+    },
+    [setMapCenter]
+  );
+
+  const handleClick = async () => {
+    let fieldsToValidate: FieldName | FieldName[] = [];
+    switch (current) {
+      case 1:
+        fieldsToValidate = ["category"];
+        break;
+      case 2:
+        fieldsToValidate = ["location"];
+        break;
+      case 3:
+        fieldsToValidate = ["guestCount", "roomCount", "bathroomCount"];
+        break;
+      case 4:
+        fieldsToValidate = ["images"];
+        break;
+      case 5:
+        fieldsToValidate = ["title", "description"];
+        break;
+      case 6:
+        fieldsToValidate = ["price"];
+        break;
+    }
+    const isValid = await form.trigger(fieldsToValidate);
+    if (current === count) {
+      form.handleSubmit((value) => handleSubmit(value))();
+    } else if (isValid) {
+      onNext();
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((value) => handleSubmit(value))}>
+      <form>
         <Carousel setApi={setApi} className="w-full max-w-[450px] px-4 mx-auto">
           <CarouselContent>
             <CarouselItem key="category">
@@ -131,6 +167,7 @@ export default function HostCarousel({
                           value={field.value}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -174,6 +211,7 @@ export default function HostCarousel({
                           </SelectContent>
                         </Select>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -235,6 +273,7 @@ export default function HostCarousel({
                             setCount={(value) => field.onChange(value)}
                           />
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -251,15 +290,21 @@ export default function HostCarousel({
                   control={form.control}
                   name="images"
                   render={({ field }) => (
-                    <ImageUpload
-                      endpoint="postImage"
-                      value={field.value}
-                      onChange={(urls) => {
-                        field.onChange(urls);
-                        if (urls.length === 0) setShowImageUpload(false);
-                      }}
-                      setError={setError}
-                    />
+                    <FormItem>
+                      <FormControl>
+                        <ImageUpload
+                          endpoint="postImage"
+                          value={field.value}
+                          onChange={async (urls) => {
+                            field.onChange(urls);
+                            if (urls.length === 0) setShowImageUpload(false);
+                            await form.trigger("images");
+                          }}
+                          setError={setError}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
                 <FormError message={error} />
@@ -304,6 +349,7 @@ export default function HostCarousel({
                           />
                         </div>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -311,6 +357,7 @@ export default function HostCarousel({
             </CarouselItem>
           </CarouselContent>
         </Carousel>
+
         <DialogFooter className="flex w-full flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0 px-8 mt-7">
           {current !== 1 && (
             <Button
@@ -325,13 +372,7 @@ export default function HostCarousel({
           <Button
             className="bg-red-bnb hover:bg-red-bnb/85 w-full flex-1 cursor-pointer p-6 sm:w-auto"
             type="button"
-            onClick={(e) => {
-              if (current === count) {
-                form.handleSubmit((value) => handleSubmit(value))(e);
-              } else {
-                onNext();
-              }
-            }}
+            onClick={handleClick}
           >
             {current === count ? "Create" : "Next"}
           </Button>
