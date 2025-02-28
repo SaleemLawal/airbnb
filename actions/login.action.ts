@@ -5,6 +5,7 @@ import { getUserByEmail } from "@/lib/user";
 import { LoginSchema } from "@/schema/login.schema";
 import { AuthError } from "next-auth";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
@@ -28,8 +29,9 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/",
+      redirect: false,
     });
+    revalidatePath("/");
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

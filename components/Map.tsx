@@ -6,11 +6,10 @@ interface MapProps {
     lat: number;
     lng: number;
   };
-  zoom: number;
 }
-const Map = ({ center, zoom }: MapProps) => {
+const Map = ({ center }: MapProps) => {
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY as string,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
 
   const options = useMemo(
@@ -18,14 +17,19 @@ const Map = ({ center, zoom }: MapProps) => {
       disableDefaultUI: true,
       clickableIcons: false,
     }),
-    [],
+    []
   );
 
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading Maps";
 
   return (
-    <GoogleMap mapContainerStyle={{ width: "100%", height: "200px" }} zoom={zoom} center={center} options={options}>
+    <GoogleMap
+      mapContainerStyle={{ width: "100%", height: "200px" }}
+      zoom={7}
+      center={center}
+      options={options}
+    >
       <Marker position={center} />
     </GoogleMap>
   );

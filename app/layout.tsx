@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 import { cn } from "@/lib/utils";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
+import SessionProviderWrapper from "@/components/SessionProviderWrapper"; // ✅ Import wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,13 +35,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`, font.className)}>
-        <div className="min-h-screen">
-          <Header />
-          {children}
-        </div>
-      </body>
-    </html>
+    <SessionProviderWrapper>
+      <html lang="en">
+        <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+        <body
+          className={cn(
+            `${geistSans.variable} ${geistMono.variable} antialiased`,
+            font.className
+          )}
+        >
+          <div className="min-h-screen">
+            <Header />
+            {children}
+          </div>
+        </body>
+      </html>
+    </SessionProviderWrapper>
   );
 }

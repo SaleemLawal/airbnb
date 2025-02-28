@@ -3,7 +3,7 @@ import NavBar from "./Navbar";
 
 export default function Header() {
   return (
-    <div className="border p-6 shadow-md">
+    <div className="border-b p-6 md:px-10">
       <NavBar />
     </div>
   );
