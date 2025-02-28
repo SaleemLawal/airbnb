@@ -1,29 +1,50 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import FormWrapper from "./FormWrapper";
 
 interface LoginProps {
   type: "Login" | "Sign Up";
+  isDialog?: boolean;
 }
 
-export default function Login({ type }: LoginProps) {
-  const [isRegistering, setIsRegistering] = useState<boolean>(type !== "Sign Up");
+export default function Login({ type, isDialog }: LoginProps) {
+  const [isRegistering, setIsRegistering] = useState<boolean>(
+    type !== "Sign Up"
+  );
+
+  const content = (
+    <DialogContent className="max-w-[350px] p-6 py-8">
+      <DialogHeader className={`${isRegistering ? "mb-5" : undefined}`}>
+        <DialogTitle className="text-center">
+          {isRegistering ? "Login" : "Register"}
+        </DialogTitle>
+      </DialogHeader>
+      <FormWrapper
+        setIsRegistering={setIsRegistering}
+        isRegistering={isRegistering}
+      />
+    </DialogContent>
+  );
+
+  if (isDialog) {
+    return content;
+  }
 
   return (
-    <Dialog modal>
+    <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"link"}>{type}</Button>
+        <Button variant="link">{type}</Button>
       </DialogTrigger>
-
-      <DialogContent className=" max-w-[350px] p-6 py-8">
-        <DialogHeader className={`${isRegistering ? "mb-5" : undefined}`}>
-          <DialogTitle>{isRegistering ? "Login" : "Register"}</DialogTitle>
-        </DialogHeader>
-        <FormWrapper setIsRegistering={setIsRegistering} isRegistering={isRegistering} />
-      </DialogContent>
+      {content}
     </Dialog>
   );
 }

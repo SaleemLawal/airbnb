@@ -15,12 +15,8 @@ import {
 import { type CarouselApi } from "@/components/ui/carousel";
 import FilterCarousel from "./FilterCarousel";
 import { Separator } from "@radix-ui/react-separator";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
-
 
 export default function FilterDialog() {
-  const user = useCurrentUser()
-  console.log("client user session", user)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -34,7 +30,7 @@ export default function FilterDialog() {
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>(
     defaultMapLocation
   );
-  const [, setLocation] = useState<string>("Any Where");
+  const [location, setLocation] = useState<string>("Any Where");
 
   useEffect(() => {
     if (!isModalOpen) {
