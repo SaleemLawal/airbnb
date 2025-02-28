@@ -3,7 +3,6 @@ interface FilterContentProps {
   header: string;
   description: string;
 }
-
 export default function FilterContent({ children, header, description }: FilterContentProps) {
   return (
     <div className="space-y-5">

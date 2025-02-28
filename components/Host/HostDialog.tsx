@@ -45,10 +45,8 @@ export default function HostDialog() {
   }, [api]);
 
   const handleSubmit = async (value: z.infer<typeof hostSchema>) => {
-    console.log("Submitting host data:", value);
     try {
       const response = await hostHome(value);
-      console.log("Host submission response:", response);
       if (response.success) {
         setIsModalOpen(false);
       }
