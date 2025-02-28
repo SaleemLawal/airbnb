@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -38,9 +44,11 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
       const response = await register(values);
 
       if (response.error) {
+        form.resetField("password");
         setError(response.error);
       }
       if (response.success) {
+        form.reset();
         setSuccess(response.success);
       }
     });
@@ -54,7 +62,12 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Name" {...field} className="p-6 " disabled={isPending} />
+                <Input
+                  placeholder="Name"
+                  {...field}
+                  className="p-6 "
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,7 +80,12 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Email" {...field} className="p-6 " disabled={isPending} />
+                <Input
+                  placeholder="Email"
+                  {...field}
+                  className="p-6 "
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,7 +98,13 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Password" type="password" {...field} className="p-6 " disabled={isPending} />
+                <Input
+                  placeholder="Password"
+                  type="password"
+                  {...field}
+                  className="p-6 "
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,7 +114,11 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
         <FormError message={error} />
         <FormSuccess message={success} />
 
-        <Button type="submit" className="bg-red-bnb hover:bg-red-bnb/85 w-full p-6" disabled={isPending}>
+        <Button
+          type="submit"
+          className="bg-red-bnb hover:bg-red-bnb/85 w-full p-6"
+          disabled={isPending}
+        >
           Continue
         </Button>
 
@@ -98,7 +126,10 @@ export default function RegisterForm({ toggle }: RegisterFormProps) {
         <Social />
         <small className="flex flex-col items-center justify-center text-gray-400 sm:flex-row md:gap-2">
           Already have an account?{" "}
-          <span className="cursor-pointer text-black hover:underline" onClick={toggle}>
+          <span
+            className="cursor-pointer text-black hover:underline"
+            onClick={toggle}
+          >
             Log in
           </span>
         </small>

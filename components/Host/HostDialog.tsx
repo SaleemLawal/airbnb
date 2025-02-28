@@ -10,11 +10,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { type CarouselApi } from "@/components/ui/carousel";
-// import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { defaultMapLocation } from "@/lib/utils";
 import HostCarousel from "./HostCarousel";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import Login from "../Auth/Login";
 
 export default function HostDialog() {
+  const user = useCurrentUser();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -72,45 +75,48 @@ export default function HostDialog() {
           Airbnb your home
         </Button>
       </DialogTrigger>
+      {!user ? (
+        <Login type={"Login"} isDialog={true} />
+      ) : (
+        <DialogContent className="w-full max-w-4xl px-0">
+          <DialogHeader>
+            <DialogTitle className="border-b-1 px-6 pb-3 text-center">
+              Airbnb your home!
+            </DialogTitle>
+          </DialogHeader>
 
-      <DialogContent className="w-full max-w-4xl px-0">
-        <DialogHeader>
-          <DialogTitle className="border-b-1 px-6 pb-3 text-center">
-            Airbnb your home!
-          </DialogTitle>
-        </DialogHeader>
+          <HostCarousel
+            setApi={setApi}
+            guestCount={guestCount}
+            roomCount={roomCount}
+            bathroomCount={bathroomCount}
+            mapCenter={mapCenter}
+            setGuestCount={setGuestCount}
+            setRoomCount={setRoomCount}
+            setBathroomCount={setBathroomCount}
+            setMapCenter={setMapCenter}
+            setLocation={setLocation}
+          />
 
-        <HostCarousel
-          setApi={setApi}
-          guestCount={guestCount}
-          roomCount={roomCount}
-          bathroomCount={bathroomCount}
-          mapCenter={mapCenter}
-          setGuestCount={setGuestCount}
-          setRoomCount={setRoomCount}
-          setBathroomCount={setBathroomCount}
-          setMapCenter={setMapCenter}
-          setLocation={setLocation}
-        />
-
-        <DialogFooter className="flex w-full flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0 px-6">
-          {current !== 1 && (
+          <DialogFooter className="flex w-full flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0 px-6">
+            {current !== 1 && (
+              <Button
+                className="w-full flex-1 cursor-pointer border-2 border-black p-6 sm:w-auto"
+                variant={"outline"}
+                onClick={onBackClick}
+              >
+                Back
+              </Button>
+            )}
             <Button
-              className="w-full flex-1 cursor-pointer border-2 border-black p-6 sm:w-auto"
-              variant={"outline"}
-              onClick={onBackClick}
+              className="bg-red-bnb hover:bg-red-bnb/85 w-full flex-1 cursor-pointer p-6 sm:w-auto"
+              onClick={OnNextClick}
             >
-              Back
+              {current === count ? "Create" : "Next"}
             </Button>
-          )}
-          <Button
-            className="bg-red-bnb hover:bg-red-bnb/85 w-full flex-1 cursor-pointer p-6 sm:w-auto"
-            onClick={OnNextClick}
-          >
-            {current === count ? "Create" : "Next"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+          </DialogFooter>
+        </DialogContent>
+      )}
     </Dialog>
   );
 }
