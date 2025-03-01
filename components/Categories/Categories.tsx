@@ -26,7 +26,7 @@ export default function Categories() {
             return (
               <div
                 key={index}
-                className="flex flex-col items-center space-y-2 text-neutral-500 hover:text-neutral-800 cursor-pointer"
+                className={`flex flex-col items-center space-y-2 text-neutral-500 hover:text-neutral-800 cursor-pointer relative`}
                 onClick={() => handleClick(category)}
               >
                 <Image
@@ -38,6 +38,11 @@ export default function Categories() {
                 <p className="text-sm">
                   {category[0].toUpperCase() + category.slice(1)}
                 </p>
+                {category === searchParams.get("category") ? (
+                  <div className="absolute bottom-[0] left-0 w-full h-1 bg-black" />
+                ) : (
+                  <div className="absolute bottom-[0] left-0 w-full h-1 bg-white"></div>
+                )}
               </div>
             );
           })}
