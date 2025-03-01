@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
-import SessionProviderWrapper from "@/components/SessionProviderWrapper";
+import SessionProviderWrapper from "@/components/SessionProviderWrapper"; // ✅ Import wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

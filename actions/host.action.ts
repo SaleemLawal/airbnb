@@ -65,4 +65,22 @@ export const hostHome = async (values: z.infer<typeof hostSchema>) => {
   return { success: "Hosted listing", data: hostListing };
 };
 
-
+export const getAllHomes = async () => {
+  try {
+    const homes = await prisma.listing.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        images: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+    return homes;
+  } catch {
+    throw new Error("Failed to fetch homes");
+  }
+};
