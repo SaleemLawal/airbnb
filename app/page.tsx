@@ -1,11 +1,14 @@
-import Categories from "@/components/Categories/Categories";
-import ListingGrid from "@/components/Listing/ListingGrid";
+// import Categories from "@/components/Categories/Categories";
+import HomeContent from "@/components/Listing/HomeContent";
 
-export default async function Home() {
+interface HomeProps {
+  searchParams: { category?: string };
+}
+export default async function Home({ searchParams }: HomeProps) {
+  const { category } = await searchParams;
   return (
-    <main className="min-h-screen">
-      <Categories />
-      <ListingGrid />
+    <main className="h-[80vh]">
+      <HomeContent category={category} />
     </main>
   );
 }
