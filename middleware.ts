@@ -11,7 +11,13 @@ export default middleware(async (req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isPublicRoute = publicRoutes.some((route) => {
+    if (route.includes("[id]")) {
+      const pattern = route.replace("[id]", "[^/]+");
+      return new RegExp(`^${pattern}$`).test(nextUrl.pathname);
+    }
+    return route === nextUrl.pathname;
+  });
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) return;
@@ -32,7 +38,7 @@ export default middleware(async (req) => {
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
     return Response.redirect(
-      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+      new URL(`/?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
 

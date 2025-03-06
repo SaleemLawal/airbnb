@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -6,22 +7,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ListingCardProps {
   imgSrc: string;
   price: number;
-  title: string;
+  location: string;
   category: string;
+  id: string;
 }
 
 export default function ListingCard({
   imgSrc,
-  title,
+  location,
   category,
   price,
+  id,
 }: ListingCardProps) {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push(`/homes/${id}`);
+  };
   return (
-    <Card className="gap-0 py-0 cursor-pointer">
+    <Card className="gap-0 py-0 cursor-pointer" onClick={handleClick}>
       <CardHeader className="p-4 pb-2 space-y-2">
         <CardTitle>
           <div className="relative w-full aspect-[4/3] overflow-hidden rounded-xl">
@@ -38,7 +46,7 @@ export default function ListingCard({
           </div>
         </CardTitle>
         <CardDescription>
-          <p className="font-semibold text-black">{title}</p>
+          <p className="font-semibold text-black">{location}</p>
         </CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0 space-y-1.5">

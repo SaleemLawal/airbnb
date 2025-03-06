@@ -17,9 +17,10 @@ export default async function HomeContent({ category }: ListingGridProps) {
       <ListingCard
         key={home.id}
         imgSrc={home.images[0]?.url}
-        title={home.title}
+        location={home.location}
         category={home.category}
         price={home.pricePerNight}
+        id={home.id}
       />
     ));
   }

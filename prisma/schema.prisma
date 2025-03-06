@@ -69,9 +69,9 @@ model VerificationToken {
 }
 
 model Listing {
-  id            String    @id @default(cuid())
-  title          String    @unique
-  description          String
+  id            String   @id @default(cuid())
+  title         String   @unique
+  description   String
   location      String
   hostId        String
   guestCount    Int
@@ -81,7 +81,7 @@ model Listing {
   pricePerNight Float
   isReserved    Boolean?
   images        Image[]
-  user          User      @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  host          User     @relation(fields: [hostId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -94,7 +94,7 @@ model Image {
   id        String  @id @default(cuid())
   url       String  @unique
   listingId String
-  listing   Listing @relation(fields: [listingId], references: [id])
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
