@@ -47,3 +47,22 @@ export const getAllHomesByCategory = async (category: string) => {
     throw new Error("Failed to fetch homes");
   }
 };
+export const getHomeById = async (id: string) => {
+  try {
+    return await prisma.listing.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        images: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        host: true,
+      },
+    });
+  } catch {
+    throw new Error("Failed to fetch homes");
+  }
+};

@@ -1,4 +1,4 @@
-+"use client";
+"use client";
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -25,11 +25,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: R
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse",
-        head_row: "flex",
-        head_cell: "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
+        head_row: "flex w-full justify-between",
+        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] flex justify-center",
         row: "flex w-full mt-2 justify-between",
         cell: cn(
-          "relative w-full p-0 text-center text-sm focus-within:relative focus-within:z-20",
+          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 w-9",
           props.mode === "range"
             ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
             : "[&:has([aria-selected])]:rounded-md",

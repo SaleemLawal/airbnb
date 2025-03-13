@@ -6,8 +6,9 @@ interface MapProps {
     lat: number;
     lng: number;
   };
+  height?: string;
 }
-const Map = ({ center }: MapProps) => {
+const Map = ({ center, height }: MapProps) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
@@ -25,7 +26,7 @@ const Map = ({ center }: MapProps) => {
 
   return (
     <GoogleMap
-      mapContainerStyle={{ width: "100%", height: "200px" }}
+      mapContainerStyle={{ width: "100%", height: height || "200px" }}
       zoom={7}
       center={center}
       options={options}
